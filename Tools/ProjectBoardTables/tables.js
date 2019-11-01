@@ -4,7 +4,7 @@ window.addEventListener('load', (event) => {
     // Set the default previous status time to noon on the day two weeks ago
     const target = new Date();
     target.setHours(target.getHours() - (24 * 7 * 2));
-    document.getElementById('previousStatusTimeField').value = `${target.getFullYear()}-${target.getMonth()+1}-${target.getDate()} 12:00`;
+    setPreviousColumnTargetDate(target.getFullYear(), target.getMonth()+1, target.getDate(), 12, '00');
 });
 
 function generateTables() {
@@ -35,8 +35,7 @@ function generateTables() {
                         assigneeName = assignee.name || assignee.login;
                     }
 
-                    const targetTime = new Date(document.getElementById('previousStatusTimeField').value);
-                    const previousColumn = getPreviousColumn(issue, targetTime);
+                    const previousColumn = getPreviousColumn(issue);
 
                     addRow(table, issueId, issueTitle, size, assigneeName, previousColumn);
                 }
@@ -95,11 +94,12 @@ function addCell(row, text) {
 
 // Despite https://help.github.com/en/github/managing-your-work-on-github/transferring-an-issue-to-another-repository
 // Migrating an issue between repos seemingly does cause it to lose its project history, though project membership isn't lost
-function getPreviousColumn(issue, targetTime) {
+function getPreviousColumn(issue) {
     if (issue.timelineItems == null) {
         return '** New Issue **';
     }
     const events = issue.timelineItems.nodes
+    const targetTime = getPreviousColumnTargetDate();
 
     let latestChange = new Date(0);
     let latestColumn = '** New Issue **';
@@ -124,6 +124,14 @@ function getSize(issue) {
         return '';
     }
     return sizeLabel.name.split(':')[1].trim();
+}
+
+function setPreviousColumnTargetDate(year, month, day, hour, min) {
+    document.getElementById('previousStatusTimeField').value = `${year}-${month}-${day} ${hour}:${min}`;
+}
+
+function getPreviousColumnTargetDate() {
+    return new Date(document.getElementById('previousStatusTimeField').value);
 }
 
 function getApiKey() {
