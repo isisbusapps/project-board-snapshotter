@@ -2,7 +2,7 @@ window.addEventListener('load', (event) => {
     document.getElementById('generateButton').addEventListener('click', generateTables);
 
     // Set the default previous status time to noon on the day two weeks ago
-    let target = new Date();
+    const target = new Date();
     target.setHours(target.getHours() - (24 * 7 * 2));
     document.getElementById('previousStatusTimeField').value = `${target.getFullYear()}-${target.getMonth()+1}-${target.getDate()} 12:00`;
 });
@@ -13,30 +13,30 @@ function generateTables() {
         clearTables();
 
         for (let column of project.columns.nodes) {
-            let table = addTable(column.name);
+            const table = addTable(column.name);
             for (let card of column.cards.nodes) {
-                let issue = card.content;
+                const issue = card.content;
 
                 if (issue === null) {
                     addRow(table, '', card.note, '', '', '', '');
                 } else {
-                    let issueId = issue.repository.name + ' #' + issue.number;
+                    const issueId = issue.repository.name + ' #' + issue.number;
                     if (issueId === ' #') {
                         issueId = '';
                     }
 
-                    let issueTitle = issue.title;
+                    const issueTitle = issue.title;
 
-                    let size = getSize(issue);
+                    const size = getSize(issue);
 
                     let assigneeName = '';
                     if (issue.assignees.nodes.length > 0) {
-                        let assignee = issue.assignees.nodes[0];
+                        const assignee = issue.assignees.nodes[0];
                         assigneeName = assignee.name || assignee.login;
                     }
 
-                    let targetTime = new Date(document.getElementById('previousStatusTimeField').value);
-                    let previousColumn = getPreviousColumn(issue, targetTime);
+                    const targetTime = new Date(document.getElementById('previousStatusTimeField').value);
+                    const previousColumn = getPreviousColumn(issue, targetTime);
 
                     addRow(table, issueId, issueTitle, size, assigneeName, previousColumn);
                 }
@@ -51,23 +51,23 @@ function getTableArea() {
 }
 
 function clearTables() {
-    let area = getTableArea();
+    const area = getTableArea();
     while (area.firstChild) {
         area.removeChild(area.firstChild);
     }
 }
 
 function addTable(title) {
-    let area = getTableArea();
-    let heading = document.createElement('h2');
+    const area = getTableArea();
+    const heading = document.createElement('h2');
     heading.textContent = title;
     area.appendChild(heading);
-    let table = document.createElement('table');
+    const table = document.createElement('table');
     table.setAttribute('data-title', title);
 
-    let row = document.createElement('tr');
+    const row = document.createElement('tr');
     for (let heading of ['Issue ID', 'Title', 'Size', 'Assignee', 'Previous status']) {
-        let cell = document.createElement('th');
+        const cell = document.createElement('th');
         cell.textContent = heading;
         row.appendChild(cell);
     }
@@ -78,7 +78,7 @@ function addTable(title) {
 }
 
 function addRow(table, issueId, issueTitle, size, assignee, previousColumn) {
-    let row = document.createElement('tr');
+    const row = document.createElement('tr');
     addCell(row, issueId);
     addCell(row, issueTitle);
     addCell(row, size);
@@ -88,7 +88,7 @@ function addRow(table, issueId, issueTitle, size, assignee, previousColumn) {
 }
 
 function addCell(row, text) {
-    let cell = document.createElement('td');
+    const cell = document.createElement('td');
     cell.textContent = text;
     row.appendChild(cell);
 }
@@ -99,13 +99,13 @@ function getPreviousColumn(issue, targetTime) {
     if (issue.timelineItems == null) {
         return '** New Issue **';
     }
-    let events = issue.timelineItems.nodes
+    const events = issue.timelineItems.nodes
 
     let latestChange = new Date(0);
     let latestColumn = '** New Issue **';
 
     for (let event of events) {
-        let changeTime = new Date(event.createdAt);
+        const changeTime = new Date(event.createdAt);
         if (changeTime > latestChange && changeTime < targetTime) {
             latestChange = changeTime;
             latestColumn = event.projectColumnName;
@@ -119,7 +119,7 @@ function getSize(issue) {
         return '';
     }
 
-    let sizeLabel = issue.labels.nodes.find(label => label.name.startsWith('size:'));
+    const sizeLabel = issue.labels.nodes.find(label => label.name.startsWith('size:'));
     if (typeof sizeLabel === 'undefined') {
         return '';
     }
@@ -139,7 +139,7 @@ function getProjectName() {
 }
 
 function fetchGraphQLProjectData() {
-    let query =
+    const query =
 `query ($organisation_name: String!, $project_name: String) {
     organization(login: $organisation_name) {
         name
