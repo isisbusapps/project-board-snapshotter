@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="tables.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css"/>
+        <link rel="shortcut icon" href="favicon.ico"/>
+        <title>Project Board Tables</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>Project Board Tables</h1>
+
+        <label>Organisation name: <input id="organisationField" value="isisbusapps"></label>
+        <br/>
+        <label>Project name: <input id="projectField" value="Proposals & Outcomes"></label>
+        <br/>
+        <label>Use previous status as of: <input id="previousStatusTimeField"> (YYYY-MM-DD hh:mm)</label>
+        <br/>
+        <label>API Key - requires 'read:org' and 'repo' permissions - see <a href="https://github.com/settings/tokens">github.com/settings/tokens</a>:<input id="apiKeyField" type="password"/></label>
+        <br/>
+        <button id="generateButton">Generate</button>
+
+        <div id="tables">
+        </div>
+    </body>
+</html>
