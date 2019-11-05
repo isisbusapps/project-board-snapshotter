@@ -21,10 +21,6 @@ function generateTables() {
                     addRow(table, '', card.note, '', '', '', '');
                 } else {
                     const issueId = issue.repository.name + ' #' + issue.number;
-                    if (issueId === ' #') {
-                        issueId = '';
-                    }
-
                     const issueTitle = issue.title;
 
                     const size = getSize(issue);
