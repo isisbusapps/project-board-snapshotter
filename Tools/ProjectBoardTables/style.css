@@ -13,9 +13,7 @@ th:first-child {
     width: 12em;
 }
 
-th:nth-child(2) {
-    
-}
+/* Column 2 has no width setting so the column will use remainder of the table's width. */
 
 th:nth-child(3) {
     width: 3em;
