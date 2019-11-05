@@ -14,7 +14,7 @@
         <br/>
         <label>Project name: <input id="projectField" value="Proposals & Outcomes"></label>
         <br/>
-        <label>Use previous status as of: <input id="previousStatusTimeField"> (YYYY-MM-DD hh:mm)</label>
+        <label>Use previous status as of: <input type="datetime-local" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}" id="previousStatusTimeField"><span id="dateFormatGuide" class="hidden">(YYYY-MM-DD hh:mm)</span></label>
         <br/>
         <label>API Key - requires 'read:org' and 'repo' permissions - see <a href="https://github.com/settings/tokens">github.com/settings/tokens</a>:<input id="apiKeyField" type="password"/></label>
         <br/>

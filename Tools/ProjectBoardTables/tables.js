@@ -127,7 +127,14 @@ function getSize(issue) {
 }
 
 function setPreviousColumnTargetDate(year, month, day, hour, min) {
-    document.getElementById('previousStatusTimeField').value = `${year}-${month}-${day} ${hour}:${min}`;
+    const input = document.getElementById('previousStatusTimeField');
+    if (input.type == "text") {
+        // Browser doesn't support datetime-local inputs, and has fallen back to text
+        input.value = `${year}-${month}-${day} ${hour}:${min}`;
+        document.getElementById('dateFormatGuide').className = '';
+    } else {
+        input.value = `${year}-${month}-${day}T${hour}:${min}`;
+    }
 }
 
 function getPreviousColumnTargetDate() {
