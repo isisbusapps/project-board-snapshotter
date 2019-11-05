@@ -22,18 +22,11 @@ function generateTables() {
                 } else {
                     const issueId = issue.repository.name + ' #' + issue.number;
                     const issueTitle = issue.title;
-
                     const size = getSize(issue);
-
-                    let assigneeName = '';
-                    if (issue.assignees.nodes.length > 0) {
-                        const assignee = issue.assignees.nodes[0];
-                        assigneeName = assignee.name || assignee.login;
-                    }
-
+                    const assigneeNames = getAssigneeNames(issue);
                     const previousColumn = getPreviousColumn(issue);
 
-                    addRow(table, issueId, issueTitle, size, assigneeName, previousColumn);
+                    addRow(table, issueId, issueTitle, size, assigneeNames, previousColumn);
                 }
 
             }
@@ -61,7 +54,7 @@ function addTable(title) {
     table.setAttribute('data-title', title);
 
     const row = document.createElement('tr');
-    for (let heading of ['Issue ID', 'Title', 'Size', 'Assignee', 'Previous status']) {
+    for (let heading of ['Issue ID', 'Title', 'Size', 'Assignee(s)', 'Previous status']) {
         const cell = document.createElement('th');
         cell.textContent = heading;
         row.appendChild(cell);
@@ -72,12 +65,12 @@ function addTable(title) {
     return table;
 }
 
-function addRow(table, issueId, issueTitle, size, assignee, previousColumn) {
+function addRow(table, issueId, issueTitle, size, assignees, previousColumn) {
     const row = document.createElement('tr');
     addCell(row, issueId);
     addCell(row, issueTitle);
     addCell(row, size);
-    addCell(row, assignee);
+    addCell(row, assignees);
     addCell(row, previousColumn);
     table.appendChild(row);
 }
@@ -108,6 +101,15 @@ function getPreviousColumn(issue) {
         }
     }
     return latestColumn;
+}
+
+function getAssigneeNames(issue) {
+    const assignees = issue.assignees.nodes;
+    const names = assignees.map(assignee => assignee.name || assignee.login);
+    if (issue.assignees.totalCount > assignees.length) {
+        names.push('...');
+    }
+    return names.join(', ');
 }
 
 function getSize(issue) {
@@ -166,7 +168,8 @@ function fetchGraphQLProjectData() {
                                 content {
                                     ... on Issue {
                                         title
-                                        assignees(first: 1) {
+                                        assignees(first: 3) {
+                                            totalCount
                                             nodes {
                                                 login
                                                 name
