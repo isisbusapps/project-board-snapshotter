@@ -13,7 +13,7 @@ function generateTables() {
         clearTables();
 
         for (let column of project.columns.nodes) {
-            const table = addTable(column.name);
+            const table = addTable(`${column.name} (${column.cards.totalCount})`);
             for (let card of column.cards.nodes) {
                 const issue = card.content;
 
