@@ -4,7 +4,7 @@ window.addEventListener('load', (event) => {
     // Set the default previous status time to noon on the day two weeks ago
     const target = new Date();
     target.setHours(target.getHours() - (24 * 7 * 2));
-    setPreviousColumnTargetDate(target.getFullYear(), target.getMonth()+1, target.getDate(), 12, '00');
+    setPreviousColumnTargetDate(target.getFullYear(), target.getMonth()+1, target.getDate(), 12, 00);
 });
 
 function generateTables() {
@@ -126,6 +126,13 @@ function getSize(issue) {
 
 function setPreviousColumnTargetDate(year, month, day, hour, min) {
     const input = document.getElementById('previousStatusTimeField');
+
+    year = String(year).padStart(4, '0');
+    month = String(month).padStart(2, '0');
+    day = String(day).padStart(2, '0');
+    hour = String(hour).padStart(2, '0');
+    min = String(min).padStart(2, '0');
+    
     if (input.type == "text") {
         // Browser doesn't support datetime-local inputs, and has fallen back to text
         input.value = `${year}-${month}-${day} ${hour}:${min}`;

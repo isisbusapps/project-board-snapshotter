@@ -4,7 +4,7 @@ A web app that generates tables showing the current state of a github project bo
 
 ## Installation
 
-The app runs entirely in browser using javascript, so all thats needed is a way to open the files in a modern browser (successfully tested on Windows 10 in Chrome 77.0.3865.120, Firefox 70.0.1 and Edge 44.18362.267.0).
+The app runs entirely in browser using javascript, so all thats needed is a way to open the files in a modern browser (successfully tested on Windows 10 in Chrome 78, Firefox 70 and Edge 44).
 
 Locally, this can either be done by pointing the browser at the files
 ```
