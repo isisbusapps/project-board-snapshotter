@@ -54,7 +54,11 @@ function addTable(title) {
     table.setAttribute('data-title', title);
 
     const row = document.createElement('tr');
-    for (let heading of ['Issue ID', 'Title', 'Size', 'Assignee(s)', 'Previous status']) {
+    const headings = ['Issue ID', 'Title', 'Size', 'Assignee(s)', 'Previous status'];
+    if (getAddNotesColumn()) {
+        headings.push('Notes');
+    }
+    for (let heading of headings) {
         const cell = document.createElement('th');
         cell.textContent = heading;
         row.appendChild(cell);
@@ -72,6 +76,9 @@ function addRow(table, issueId, issueTitle, size, assignees, previousColumn) {
     addCell(row, size);
     addCell(row, assignees);
     addCell(row, previousColumn);
+    if (getAddNotesColumn()) {
+        addCell(row, '');
+    }
     table.appendChild(row);
 }
 
@@ -156,6 +163,10 @@ function getOrganisationName() {
 
 function getProjectName() {
     return document.getElementById('projectField').value;
+}
+
+function getAddNotesColumn() {
+    return document.getElementById('addNotesCheckbox').checked;
 }
 
 function fetchGraphQLProjectData() {

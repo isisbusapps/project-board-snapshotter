@@ -1,7 +1,7 @@
 table {
     border-collapse: collapse;
     table-layout: fixed;
-    width: 60em;
+    width: 70em;
 }
 
 table, th, td {
@@ -10,7 +10,7 @@ table, th, td {
 }
 
 th:first-child {
-    width: 12em;
+    width: 14em;
 }
 
 /* Column 2 has no width setting so the column will use remainder of the table's width. */
@@ -24,6 +24,10 @@ th:nth-child(4) {
 }
 
 th:nth-child(5) {
+    width: 8em;
+}
+
+th:nth-child(6) {
     width: 8em;
 }
 
