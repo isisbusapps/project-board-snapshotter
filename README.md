@@ -2,7 +2,9 @@
 
 A web app that generates tables showing the current state of a github project board.
 
-## Installation
+Live site: https://isisbusapps.github.io/project-board-snapshotter/
+
+## Local installation
 
 The app runs entirely in browser using javascript, so all thats needed is a way to open the files in a modern browser (successfully tested on Windows 10 in Chrome 78, Firefox 70 and Edge 44).
 
@@ -10,13 +12,10 @@ Locally, this can either be done by pointing the browser at the files
 ```
 file:///C:/Programming/ISISBusApps/Tools/ProjectBoardTables/index.html
 ```
-or you can run a web server in this projects directory. If you have python 3 installed, this can be done in a terminal with:
+or you can run a web server in this projects directory. For instance, with python installed, this can be done in a terminal with one of:
 ```
-python -m http.server
-```
-or for python 2.7:
-```
-python -m SimpleHTTPServer
+python3 -m http.server
+python2 -m SimpleHTTPServer
 ```
 
 ## Usage
