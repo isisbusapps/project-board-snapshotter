@@ -45,6 +45,10 @@ function generateTables() {
 
             }
         }
+    })
+    .catch(error => {
+        console.error(error);
+        alert("An error occurred when processing:\n" + error);
     });
 }
 
