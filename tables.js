@@ -9,10 +9,9 @@ window.addEventListener('load', (event) => {
 
 function checkForHttpErrors(response) {
     if (response.status !== 200) {
-        console.error("Non 200 response code", response);
-    }
-    if (response.status === 401) {
-        throw "Authorisation error - the API key may be wrong or invalid for the requested board";
+        response.text().then(text => {
+            throw `Unexpected response code ${response.status} - ${text}`
+        });
     }
     return response;
 }
