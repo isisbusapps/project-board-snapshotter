@@ -7,6 +7,16 @@ window.addEventListener('load', (event) => {
     setPreviousColumnTargetDate(target.getFullYear(), target.getMonth()+1, target.getDate(), 12, 00);
 });
 
+function showErrorsIfPresent(response) {
+    if (response.hasOwnProperty('errors')) {
+        console.error(response.errors);
+        message = "Error(s) occurred when querying github\n" + response.errors.map(error => error.message).join('\n');
+        alert(message);
+        console.error(message);
+    }
+    return response;
+}
+
 function generateTables() {
     fetchGraphQLProjectData()
     .then((project) => {
@@ -255,5 +265,6 @@ function fetchGraphQLProjectData() {
         })
     })
     .then(response => response.json())
+    .then(showErrorsIfPresent)
     .then(json => json.data.organization.projects.nodes[0]);
 }
