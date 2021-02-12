@@ -9,7 +9,7 @@ window.addEventListener('load', (event) => {
 
 function checkForHttpErrors(response) {
     if (response.status !== 200) {
-        response.text().then(text => {
+        return response.text().then(text => {
             throw `Unexpected response code ${response.status} - ${text}`
         });
     }
