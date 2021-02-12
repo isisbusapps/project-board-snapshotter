@@ -7,6 +7,16 @@ window.addEventListener('load', (event) => {
     setPreviousColumnTargetDate(target.getFullYear(), target.getMonth()+1, target.getDate(), 12, 00);
 });
 
+function checkForHttpErrors(response) {
+    if (response.status !== 200) {
+        console.error("Non 200 response code", response);
+    }
+    if (response.status === 401) {
+        throw "Authorisation error - the API key may be wrong or invalid for the requested board";
+    }
+    return response;
+}
+
 function checkForJsonErrors(json) {
     if (json.hasOwnProperty('errors')) {
         console.error(json.errors);
@@ -268,6 +278,7 @@ function fetchGraphQLProjectData() {
             },
         })
     })
+    .then(checkForHttpErrors)
     .then(response => response.json())
     .then(checkForJsonErrors)
     .then(json => json.data.organization.projects.nodes[0]);
