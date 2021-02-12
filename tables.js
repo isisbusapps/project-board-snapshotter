@@ -7,18 +7,14 @@ window.addEventListener('load', (event) => {
     setPreviousColumnTargetDate(target.getFullYear(), target.getMonth()+1, target.getDate(), 12, 00);
 });
 
-function showErrorsIfPresent(response) {
-    if (response.hasOwnProperty('errors')) {
-        console.error(response.errors);
-        message = "Error(s) occurred when querying github\n" + response.errors.map(error => error.message).join('\n');
-        alert(message);
-        console.error(message);
-    } else if (response.data.organization.projects.nodes.length == 0) {
-        message = `Unable to find a project with name "${getProjectName()}" in organisation "${getOrganisationName()}"`;
-        alert(message);
-        console.error(message);
+function checkForJsonErrors(json) {
+    if (json.hasOwnProperty('errors')) {
+        console.error(json.errors);
+        throw json.errors.map(error => error.message).join('\n');
+    } else if (json.data.organization.projects.nodes.length == 0) {
+        throw `Unable to find a project with name "${getProjectName()}" in organisation "${getOrganisationName()}"`;
     }
-    return response;
+    return json;
 }
 
 function generateTables() {
@@ -273,6 +269,6 @@ function fetchGraphQLProjectData() {
         })
     })
     .then(response => response.json())
-    .then(showErrorsIfPresent)
+    .then(checkForJsonErrors)
     .then(json => json.data.organization.projects.nodes[0]);
 }
