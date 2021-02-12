@@ -13,6 +13,10 @@ function showErrorsIfPresent(response) {
         message = "Error(s) occurred when querying github\n" + response.errors.map(error => error.message).join('\n');
         alert(message);
         console.error(message);
+    } else if (response.data.organization.projects.nodes.length == 0) {
+        message = `Unable to find a project with name "${getProjectName()}" in organisation "${getOrganisationName()}"`;
+        alert(message);
+        console.error(message);
     }
     return response;
 }
