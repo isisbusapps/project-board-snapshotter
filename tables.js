@@ -7,6 +7,25 @@ window.addEventListener('load', (event) => {
     setPreviousColumnTargetDate(target.getFullYear(), target.getMonth()+1, target.getDate(), 12, 00);
 });
 
+function checkForHttpErrors(response) {
+    if (response.status !== 200) {
+        return response.text().then(text => {
+            throw `Unexpected response code ${response.status} - ${text}`
+        });
+    }
+    return response;
+}
+
+function checkForJsonErrors(json) {
+    if (json.hasOwnProperty('errors')) {
+        console.error(json.errors);
+        throw json.errors.map(error => error.message).join('\n');
+    } else if (json.data.organization.projects.nodes.length == 0) {
+        throw `Unable to find a project with name "${getProjectName()}" in organisation "${getOrganisationName()}"`;
+    }
+    return json;
+}
+
 function generateTables() {
     fetchGraphQLProjectData()
     .then((project) => {
@@ -31,6 +50,10 @@ function generateTables() {
 
             }
         }
+    })
+    .catch(error => {
+        console.error(error);
+        alert("An error occurred when processing:\n" + error);
     });
 }
 
@@ -254,6 +277,8 @@ function fetchGraphQLProjectData() {
             },
         })
     })
+    .then(checkForHttpErrors)
     .then(response => response.json())
+    .then(checkForJsonErrors)
     .then(json => json.data.organization.projects.nodes[0]);
 }
