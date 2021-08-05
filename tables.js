@@ -27,6 +27,7 @@ function checkForJsonErrors(json) {
 }
 
 function generateTables() {
+    setProgressMessage('Fetching data');
     fetchGraphQLProjectData()
     .then((project) => {
         clearTables();
@@ -54,6 +55,9 @@ function generateTables() {
     .catch(error => {
         console.error(error);
         alert("An error occurred when processing:\n" + error);
+    })
+    .then(() => {
+        setProgressMessage('');
     });
 }
 
@@ -192,6 +196,10 @@ function getAddNotesColumn() {
     return document.getElementById('addNotesCheckbox').checked;
 }
 
+function setProgressMessage(message) {
+    document.getElementById('progressMessage').innerText = message;
+}
+
 function fetchGraphQLProjectData(columnCursor = null, cardCursor = null, project = {columns:{nodes:[]}}) {
     const query =
 `query ($organisation_name: String!, $project_name: String, $column_cursor: String, $card_cursor: String) {
@@ -293,6 +301,7 @@ function fetchGraphQLProjectData(columnCursor = null, cardCursor = null, project
     .then(checkForJsonErrors)
     .then(json => json.data.organization.projects.nodes[0])
     .then(projectResponse => {
+        setProgressMessage('Fetching data for column ' + (project.columns.nodes.length + 1) + '/' + projectResponse.columns.totalCount);
         if (cardCursor === null) {
             // new column
             project.columns.nodes.push(projectResponse.columns.nodes[0])
