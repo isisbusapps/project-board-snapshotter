@@ -322,10 +322,12 @@ function fetchGraphQLProjectData(columnCursor = null, cardCursor = null, project
             }
         }
         if (projectResponse.columns.nodes[0].cards.pageInfo.hasNextPage && !isColumnSizeLimited()) {
+            // get more cards for this column
             setProgressMessage('Fetching data for column ' + (project.columns.nodes.length) + '/' + projectResponse.columns.totalCount);
             return fetchGraphQLProjectData(columnCursor, projectResponse.columns.nodes[0].cards.pageInfo.endCursor, project);
         }
         if (projectResponse.columns.pageInfo.hasNextPage) {
+            // get the next column
             setProgressMessage('Fetching data for column ' + (project.columns.nodes.length + 1) + '/' + projectResponse.columns.totalCount);
             return fetchGraphQLProjectData(projectResponse.columns.pageInfo.endCursor, null, project);
         }
