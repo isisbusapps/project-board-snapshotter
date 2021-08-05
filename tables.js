@@ -27,6 +27,7 @@ function checkForJsonErrors(json) {
 }
 
 function generateTables() {
+    setButtonDisabledState(true);
     setProgressMessage('Fetching data');
     fetchGraphQLProjectData()
     .then((project) => {
@@ -57,6 +58,7 @@ function generateTables() {
         alert("An error occurred when processing:\n" + error);
     })
     .then(() => {
+        setButtonDisabledState(false);
         setProgressMessage('');
     });
 }
@@ -194,6 +196,10 @@ function getProjectName() {
 
 function getAddNotesColumn() {
     return document.getElementById('addNotesCheckbox').checked;
+}
+
+function setButtonDisabledState(disabled) {
+    document.getElementById('generateButton').disabled = disabled;
 }
 
 function setProgressMessage(message) {
