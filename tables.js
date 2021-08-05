@@ -192,19 +192,28 @@ function getAddNotesColumn() {
     return document.getElementById('addNotesCheckbox').checked;
 }
 
-function fetchGraphQLProjectData() {
+function fetchGraphQLProjectData(columnCursor = null, cardCursor = null, project = {columns:{nodes:[]}}) {
     const query =
-`query ($organisation_name: String!, $project_name: String) {
+`query ($organisation_name: String!, $project_name: String, $column_cursor: String, $card_cursor: String) {
     organization(login: $organisation_name) {
         name
         projects (first: 1 search: $project_name) {
             nodes {
                 name
-                columns(first: 20) {
+                columns(first: 1 after: $column_cursor) {
+                    totalCount
+                    pageInfo {
+                        endCursor
+                        hasNextPage
+                    }
                     nodes {
                         name
-                        cards(archivedStates: [NOT_ARCHIVED]){
+                        cards(archivedStates: [NOT_ARCHIVED] after: $card_cursor){
                             totalCount
+                            pageInfo {
+                                endCursor
+                                hasNextPage
+                            }
                             nodes {
                                 content {
                                     ... on Issue {
@@ -274,11 +283,31 @@ function fetchGraphQLProjectData() {
             variables: {
                 organisation_name: getOrganisationName(),
                 project_name: getProjectName(),
+                column_cursor: columnCursor,
+                card_cursor: cardCursor
             },
         })
     })
     .then(checkForHttpErrors)
     .then(response => response.json())
     .then(checkForJsonErrors)
-    .then(json => json.data.organization.projects.nodes[0]);
+    .then(json => json.data.organization.projects.nodes[0])
+    .then(projectResponse => {
+        if (cardCursor === null) {
+            // new column
+            project.columns.nodes.push(projectResponse.columns.nodes[0])
+        } else {
+            // add cards to current column
+            for (let card of projectResponse.columns.nodes[0].cards.nodes) {
+                project.columns.nodes[project.columns.nodes.length - 1].cards.nodes.push(card)
+            }
+        }
+        if (projectResponse.columns.nodes[0].cards.pageInfo.hasNextPage) {
+            return fetchGraphQLProjectData(columnCursor, projectResponse.columns.nodes[0].cards.pageInfo.endCursor, project);
+        }
+        if (projectResponse.columns.pageInfo.hasNextPage) {
+            return fetchGraphQLProjectData(projectResponse.columns.pageInfo.endCursor, null, project);
+        }
+        return project
+    });
 }
