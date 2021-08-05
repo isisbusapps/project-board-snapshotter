@@ -307,7 +307,6 @@ function fetchGraphQLProjectData(columnCursor = null, cardCursor = null, project
     .then(checkForJsonErrors)
     .then(json => json.data.organization.projects.nodes[0])
     .then(projectResponse => {
-        setProgressMessage('Fetching data for column ' + (project.columns.nodes.length + 1) + '/' + projectResponse.columns.totalCount);
         if (cardCursor === null) {
             // new column
             project.columns.nodes.push(projectResponse.columns.nodes[0])
@@ -318,9 +317,11 @@ function fetchGraphQLProjectData(columnCursor = null, cardCursor = null, project
             }
         }
         if (projectResponse.columns.nodes[0].cards.pageInfo.hasNextPage) {
+            setProgressMessage('Fetching data for column ' + (project.columns.nodes.length) + '/' + projectResponse.columns.totalCount);
             return fetchGraphQLProjectData(columnCursor, projectResponse.columns.nodes[0].cards.pageInfo.endCursor, project);
         }
         if (projectResponse.columns.pageInfo.hasNextPage) {
+            setProgressMessage('Fetching data for column ' + (project.columns.nodes.length + 1) + '/' + projectResponse.columns.totalCount);
             return fetchGraphQLProjectData(projectResponse.columns.pageInfo.endCursor, null, project);
         }
         return project
