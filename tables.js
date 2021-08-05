@@ -198,6 +198,11 @@ function getAddNotesColumn() {
     return document.getElementById('addNotesCheckbox').checked;
 }
 
+function isColumnSizeLimited() {
+    // This limits to 100, as that's the default (and maximum) cursor window size in github's graphql api
+    return document.getElementById('columnLimitCheckbox').checked;
+}
+
 function setButtonDisabledState(disabled) {
     document.getElementById('generateButton').disabled = disabled;
 }
@@ -316,7 +321,7 @@ function fetchGraphQLProjectData(columnCursor = null, cardCursor = null, project
                 project.columns.nodes[project.columns.nodes.length - 1].cards.nodes.push(card)
             }
         }
-        if (projectResponse.columns.nodes[0].cards.pageInfo.hasNextPage) {
+        if (projectResponse.columns.nodes[0].cards.pageInfo.hasNextPage && !isColumnSizeLimited()) {
             setProgressMessage('Fetching data for column ' + (project.columns.nodes.length) + '/' + projectResponse.columns.totalCount);
             return fetchGraphQLProjectData(columnCursor, projectResponse.columns.nodes[0].cards.pageInfo.endCursor, project);
         }
