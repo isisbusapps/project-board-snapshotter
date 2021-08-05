@@ -10,7 +10,7 @@ window.addEventListener('load', (event) => {
 function checkForHttpErrors(response) {
     if (response.status !== 200) {
         return response.text().then(text => {
-            throw `Unexpected response code ${response.status} - ${text}`
+            throw `Unexpected response code ${response.status} - ${text}`;
         });
     }
     return response;
@@ -123,7 +123,7 @@ function getPreviousColumn(issue) {
     if (issue.timelineItems == null) {
         return '** New Issue **';
     }
-    const events = issue.timelineItems.nodes
+    const events = issue.timelineItems.nodes;
     const targetTime = getPreviousColumnTargetDate();
 
     let latestChange = new Date(0);
@@ -314,11 +314,11 @@ function fetchGraphQLProjectData(columnCursor = null, cardCursor = null, project
     .then(projectResponse => {
         if (cardCursor === null) {
             // new column
-            project.columns.nodes.push(projectResponse.columns.nodes[0])
+            project.columns.nodes.push(projectResponse.columns.nodes[0]);
         } else {
             // add cards to current column
             for (let card of projectResponse.columns.nodes[0].cards.nodes) {
-                project.columns.nodes[project.columns.nodes.length - 1].cards.nodes.push(card)
+                project.columns.nodes[project.columns.nodes.length - 1].cards.nodes.push(card);
             }
         }
         if (projectResponse.columns.nodes[0].cards.pageInfo.hasNextPage && !isColumnSizeLimited()) {
@@ -329,6 +329,6 @@ function fetchGraphQLProjectData(columnCursor = null, cardCursor = null, project
             setProgressMessage('Fetching data for column ' + (project.columns.nodes.length + 1) + '/' + projectResponse.columns.totalCount);
             return fetchGraphQLProjectData(projectResponse.columns.pageInfo.endCursor, null, project);
         }
-        return project
+        return project;
     });
 }
